@@ -115,6 +115,18 @@
 			htmlSupport: {
 				allow: [
 					{
+						name: 'button',
+						attributes: true,
+						classes: true,
+						styles: true
+					},
+					{
+						name: 'channelButton',
+						attributes: true,
+						classes: true,
+						styles: true
+					},
+					{
 						name: /.*/,
 						attributes: true,
 						classes: true,
@@ -166,8 +178,18 @@
 				},
 				language: 'en',
 				licenseKey: '',
-		
-				
+		      link: {
+            decorators: {
+                addTargetToExternalLinks: {
+                    mode: 'automatic',
+                    callback: url => /^(https?:)?\/\//.test( url ),
+                    attributes: {
+                        target: '_blank',
+                        rel: 'noopener noreferrer'
+                    }
+                }
+            }
+        }
 				
 			} )
 			.then( editor => {
@@ -181,15 +203,15 @@
 				console.error( error );
 			} );
 
-			document.addEventListener('click', (e) => {
-				if (e.type === 'click') {
-					const value = e.target.innerHTML
-					const label = value.replace('Buy Me ', '')
-					const item = window?.channelList?.find(item => item.channelName === label)
-					if (item) {
-						console.log(item, 'click the button');
-					}
-				}
-			})
+			// document.addEventListener('click', (e) => {
+			// 	if (e.type === 'click') {
+			// 		const value = e.target.innerHTML
+			// 		const label = value.replace('Buy Me ', '')
+			// 		const item = window?.channelList?.find(item => item.channelName === label)
+			// 		if (item) {
+			// 			console.log(item, 'click the button');
+			// 		}
+			// 	}
+			// })
 	</script>
 </body>

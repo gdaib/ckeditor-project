@@ -135,7 +135,7 @@ class SelectDialog extends Plugin {
 
       button.set({
         icon: icon,
-        withText: true,
+        withText: true
       });
 
       button.on("execute", async () => {
@@ -143,19 +143,17 @@ class SelectDialog extends Plugin {
 
         // Change the model using the model writer.
         editor.model.change((writer) => {
-
           const button = writer.createElement(ChannelButtonName, {
-            attributes: {
-              id: "aaaa",
-              "data-description": "description",
-              "data-id": "data-iaaad",
-              "data-description": "description",
-              "data-channelId": "data-adfsfds",
-            },
+            "data-description": "description",
+            "data-id": "data-iaaad",
+            "data-description": "description",
+            "data-channelId": "data-adfsfds",
+            id: "aaaa"
           });
 
-
-          const textEl = writer.createText(`Buy Me ${channelName}`);
+          const textEl = writer.createText(`Buy Me`, {
+            linkHref: `https://www.baidu.com?channelName=${channelName}`
+          });
 
           writer.append(textEl, button);
 
@@ -173,14 +171,8 @@ class SelectDialog extends Plugin {
       isObject: true,
       allowWhere: "$block",
       isInline: true,
+      allowAttributes: true
     });
-    const dataFilter = this.editor.plugins.get("DataFilter");
-     dataFilter.allowAttributes({
-       name: ChannelButtonName,
-       attributes: true,
-       classes: true,
-       styles: true
-     });
   }
 
   _defineConverters() {
@@ -191,11 +183,8 @@ class SelectDialog extends Plugin {
       view: {
         name: "button",
         classes: "dropdown-item button aBuyChannel",
-        attributes: {
-          "data-id": "data-id",
-          "data-channelId": "data-channelId",
-        },
-      },
+        attributes: true
+      }
     });
   }
 }
@@ -246,21 +235,21 @@ ClassicEditor.builtinPlugins = [
   TodoList,
   UnderlineEditing,
   SelectDialog,
-  GeneralHtmlSupport,
+  GeneralHtmlSupport
 ];
 
 // Editor configuration.
 ClassicEditor.defaultConfig = {
   htmlSupport: {
-      allow: [
-          {
-            name: /.*/,
-            attributes: true,
-            classes: true,
-            styles: true
-          }
-        ]
-      },
+    allow: [
+      {
+        name: /.*/,
+        attributes: true,
+        classes: true,
+        styles: true
+      }
+    ]
+  },
   toolbar: {
     items: [
       "heading",
@@ -289,8 +278,8 @@ ClassicEditor.defaultConfig = {
       "undo",
       "redo",
       "horizontalLine",
-      "select-dialog",
-    ],
+      "select-dialog"
+    ]
   },
 
   image: {
@@ -300,12 +289,12 @@ ClassicEditor.defaultConfig = {
       "imageStyle:side",
       "|",
       "toggleImageCaption",
-      "imageTextAlternative",
-    ],
+      "imageTextAlternative"
+    ]
   },
   table: {
-    contentToolbar: ["tableColumn", "tableRow", "mergeTableCells"],
+    contentToolbar: ["tableColumn", "tableRow", "mergeTableCells"]
   },
   // This value must be kept in sync with the language defined in webpack.config.js.
-  language: "en",
+  language: "en"
 };
