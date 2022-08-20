@@ -118,7 +118,6 @@ function useSelect() {
 }
 const ChannelButtonName = "channelButton";
 
-
 class SelectDialog extends Plugin {
   init() {
     const editor = this.editor;
@@ -151,7 +150,7 @@ class SelectDialog extends Plugin {
             id: "aaaa"
           });
 
-          const textEl = writer.createText(`Buy Me`, {
+          const textEl = writer.createText(`Buy Me Now`, {
             linkHref: `https://www.baidu.com?channelName=${channelName}`
           });
 
@@ -168,10 +167,11 @@ class SelectDialog extends Plugin {
   _defineSchema() {
     const schema = this.editor.model.schema;
     schema.register(ChannelButtonName, {
-      isObject: true,
+      isLimit: true,
       allowWhere: "$block",
-      isInline: true,
+      // isInline: true,
       allowAttributes: true
+      // isContent: true
     });
   }
 
@@ -181,7 +181,7 @@ class SelectDialog extends Plugin {
     conversion.elementToElement({
       model: ChannelButtonName,
       view: {
-        name: "button",
+        name: "div",
         classes: "dropdown-item button aBuyChannel",
         attributes: true
       }
