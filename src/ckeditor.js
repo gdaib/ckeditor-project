@@ -117,7 +117,40 @@ function useSelect() {
   });
 }
 const ChannelButtonName = "channelButton";
+const channelText = "channelText";
+const ChannelNameKey = "channelName";
+const ChannelIdKey = "channelId";
 
+const NameMap = {
+  ChannelButtonName,
+  ChannelNameKey,
+  ChannelIdKey,
+  channelText
+};
+
+function createSimpleBox(writer, { name, id }) {
+  const button = writer.createElement(NameMap.ChannelButtonName);
+  const buttonName = writer.createElement(NameMap.ChannelNameKey);
+  const channelText = writer.createElement(NameMap.channelText);
+  writer.append(writer.createText(name), buttonName);
+
+  const buttonId = writer.createElement(NameMap.ChannelIdKey);
+  writer.append(writer.createText(id), buttonId);
+
+  const textEl = writer.createText(`Buy Me Now`);
+
+  writer.append(textEl, channelText);
+
+  writer.append(channelText, button);
+  writer.append(buttonId, button);
+  writer.append(buttonName, button);
+
+  // There must be at least one paragraph for the description to be editable.
+  // See https://github.com/ckeditor/ckeditor5/issues/1464.
+  // writer.appendElement("paragraph", button);
+
+  return button;
+}
 class SelectDialog extends Plugin {
   init() {
     const editor = this.editor;
@@ -142,20 +175,10 @@ class SelectDialog extends Plugin {
 
         // Change the model using the model writer.
         editor.model.change((writer) => {
-          const button = writer.createElement(ChannelButtonName, {
-            "data-description": "description",
-            "data-id": "data-iaaad",
-            "data-description": "description",
-            "data-channelId": "data-adfsfds",
-            id: "aaaa"
+          const button = createSimpleBox(writer, {
+            name: channelName,
+            id: value
           });
-
-          const textEl = writer.createText(`Buy Me Now`, {
-            linkHref: `https://www.baidu.com?channelName=${channelName}`
-          });
-
-          writer.append(textEl, button);
-
           editor.model.insertContent(button);
         });
       });
@@ -166,12 +189,29 @@ class SelectDialog extends Plugin {
 
   _defineSchema() {
     const schema = this.editor.model.schema;
-    schema.register(ChannelButtonName, {
-      isLimit: true,
+    schema.register(NameMap.ChannelButtonName, {
+      isObject: true,
       allowWhere: "$block",
-      // isInline: true,
+      allowContentOf: "$root",
       allowAttributes: true
-      // isContent: true
+    });
+
+    schema.register(NameMap.channelText, {
+      isLimit: true,
+      // isObject: true,
+      allowWhere: NameMap.ChannelButtonName,
+      allowContentOf: "$block",
+      allowAttributes: true
+    });
+
+    schema.register(NameMap.ChannelIdKey, {
+      allowWhere: "$text",
+      allowAttributes: true
+    });
+
+    schema.register(NameMap.ChannelNameKey, {
+      allowWhere: "$text",
+      allowAttributes: true
     });
   }
 
@@ -179,11 +219,41 @@ class SelectDialog extends Plugin {
     const conversion = this.editor.conversion;
 
     conversion.elementToElement({
-      model: ChannelButtonName,
+      model: NameMap.ChannelButtonName,
       view: {
         name: "div",
         classes: "dropdown-item button aBuyChannel",
         attributes: true
+      }
+    });
+    conversion.elementToElement({
+      model: NameMap.channelText,
+      view: {
+        name: "span",
+        attributes: true
+      }
+    });
+
+    conversion.elementToElement({
+      model: NameMap.ChannelIdKey,
+      view: {
+        name: "span",
+        classes: "channel-id",
+        attributes: true,
+        styles: {
+          display: "none"
+        }
+      }
+    });
+    conversion.elementToElement({
+      model: NameMap.ChannelNameKey,
+      view: {
+        name: "span",
+        classes: "channel-name",
+        attributes: true,
+        styles: {
+          display: "none"
+        }
       }
     });
   }
