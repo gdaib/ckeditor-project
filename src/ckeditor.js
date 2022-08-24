@@ -54,7 +54,6 @@ import TextTransformation from "@ckeditor/ckeditor5-typing/src/texttransformatio
 import TodoList from "@ckeditor/ckeditor5-list/src/todolist";
 import UnderlineEditing from "@ckeditor/ckeditor5-basic-styles/src/underline";
 import GeneralHtmlSupport from "@ckeditor/ckeditor5-html-support/src/generalhtmlsupport";
-// import { SimpleBox } from "./a";
 import { ChannelButtonPlugin } from "./ChannelButtonPlugin";
 
 // Plugins to include in the build.

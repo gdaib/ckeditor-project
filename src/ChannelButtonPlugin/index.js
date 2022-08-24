@@ -120,21 +120,21 @@ class ChannelButtonEditing extends Plugin {
       model: NameMap.ChannelButtonName,
       view: {
         name: "div",
-        classes: "button aBuyChannel"
+        classes: "aBuyChannel"
       }
     });
     conversion.for("dataDowncast").elementToElement({
       model: NameMap.ChannelButtonName,
       view: {
         name: "div",
-        classes: "button aBuyChannel"
+        classes: "aBuyChannel"
       }
     });
     conversion.for("editingDowncast").elementToElement({
       model: NameMap.ChannelButtonName,
       view: (modelElement, { writer: viewWriter }) => {
         const div = viewWriter.createContainerElement("div", {
-          class: "button aBuyChannel"
+          class: "aBuyChannel"
         });
 
         return toWidget(div, viewWriter);
