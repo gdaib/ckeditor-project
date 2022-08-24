@@ -130,11 +130,14 @@ class ChannelButtonEditing extends Plugin {
         classes: "aBuyChannel"
       }
     });
+
     conversion.for("editingDowncast").elementToElement({
       model: NameMap.ChannelButtonName,
       view: (modelElement, { writer: viewWriter }) => {
         const div = viewWriter.createContainerElement("div", {
-          class: "aBuyChannel"
+          class: "button aBuyChannel",
+          "data-id": "aaa",
+          "data-name": "abcd"
         });
 
         return toWidget(div, viewWriter);
@@ -156,7 +159,6 @@ class ChannelButtonEditing extends Plugin {
     conversion.for("editingDowncast").elementToElement({
       model: NameMap.channelText,
       view: (modelElement, { writer: viewWriter }) => {
-        // Note: You use a more specialized createEditableElement() method here.
         const span = viewWriter.createEditableElement("span");
 
         return toWidgetEditable(span, viewWriter);
