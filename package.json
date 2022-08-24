@@ -50,7 +50,7 @@
   },
   "scripts": {
     "build": "webpack --mode production",
-    "watch": "npm run build --watch"
+    "watch": "webpack --mode production --watch"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-widget": "^35.0.1"

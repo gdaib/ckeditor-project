@@ -4,9 +4,12 @@ import {
   toWidgetEditable
 } from "@ckeditor/ckeditor5-widget/src/utils";
 import Widget from "@ckeditor/ckeditor5-widget/src/widget";
-import ButtonView from "@ckeditor/ckeditor5-ui/src/button/buttonview";
+import {
+  addListToDropdown,
+  createDropdown
+} from "@ckeditor/ckeditor5-ui/src/dropdown/utils";
 
-import { useSelect } from "./utils";
+import { getDropdownItemsDefinitions } from "./utils";
 
 const ChannelButtonName = "channelButton";
 const channelText = "channelText";
@@ -27,21 +30,29 @@ export class ChannelButtonPlugin extends Plugin {
 }
 
 class SelectDialogUI extends Plugin {
-  init() {
+  async init() {
     const editor = this.editor;
 
+    // get the data
+    const dropdownItems = await getDropdownItemsDefinitions();
+
     editor.ui.componentFactory.add("select-dialog", (locale) => {
-      const buttonView = new ButtonView(locale);
+      const dropdownView = new createDropdown(locale);
+
+      // Populate the list in the dropdown with items.
+      addListToDropdown(dropdownView, dropdownItems);
 
       const icon = `<svg style="width: 20px;height: 20px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M528.12 301.319l47.273-208C578.806 78.301 567.391 64 551.99 64H159.208l-9.166-44.81C147.758 8.021 137.93 0 126.529 0H24C10.745 0 0 10.745 0 24v16c0 13.255 10.745 24 24 24h69.883l70.248 343.435C147.325 417.1 136 435.222 136 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-15.674-6.447-29.835-16.824-40h209.647C430.447 426.165 424 440.326 424 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-22.172-12.888-41.332-31.579-50.405l5.517-24.276c3.413-15.018-8.002-29.319-23.403-29.319H218.117l-6.545-32h293.145c11.206 0 20.92-7.754 23.403-18.681z"/></svg>`;
 
-      buttonView.set({
+      dropdownView.buttonView.set({
         icon: icon,
-        withText: true
+        tooltip: true,
+        label: "Select Channel"
+        // withText: true
       });
 
-      buttonView.on("execute", async () => {
-        const { value: channelId, label: channelName } = await useSelect();
+      dropdownView.on("execute", async (evt) => {
+        const { channelName, channelId } = evt.source.commandParam;
 
         editor.model.change((writer) => {
           const button = createChannelButton(writer, {
@@ -52,7 +63,7 @@ class SelectDialogUI extends Plugin {
         });
       });
 
-      return buttonView;
+      return dropdownView;
     });
   }
 }
@@ -75,7 +86,9 @@ class ChannelButtonEditing extends Plugin {
       isObject: true,
 
       // Allow in places where other blocks are allowed (e.g. directly in the root).
-      allowWhere: "$block"
+      allowWhere: "$block",
+
+      allowAttributes: ["channel-id", "channel-name"]
     });
 
     schema.register(NameMap.channelText, {
@@ -107,21 +120,21 @@ class ChannelButtonEditing extends Plugin {
       model: NameMap.ChannelButtonName,
       view: {
         name: "div",
-        classes: "dropdown-item button aBuyChannel"
+        classes: "button aBuyChannel"
       }
     });
     conversion.for("dataDowncast").elementToElement({
       model: NameMap.ChannelButtonName,
       view: {
         name: "div",
-        classes: "dropdown-item button aBuyChannel"
+        classes: "button aBuyChannel"
       }
     });
     conversion.for("editingDowncast").elementToElement({
       model: NameMap.ChannelButtonName,
       view: (modelElement, { writer: viewWriter }) => {
         const div = viewWriter.createContainerElement("div", {
-          class: "dropdown-item button aBuyChannel"
+          class: "button aBuyChannel"
         });
 
         return toWidget(div, viewWriter);
@@ -176,8 +189,10 @@ class ChannelButtonEditing extends Plugin {
 }
 
 function createChannelButton(writer, { id, name }) {
-  console.log({ id, name }, "{ value, name }");
-  const channelButton = writer.createElement(NameMap.ChannelButtonName);
+  const channelButton = writer.createElement(NameMap.ChannelButtonName, {
+    "channel-id": id,
+    "channel-name": name
+  });
   const buttonText = writer.createElement(NameMap.channelText);
 
   const buttonName = writer.createElement(NameMap.ChannelNameKey);

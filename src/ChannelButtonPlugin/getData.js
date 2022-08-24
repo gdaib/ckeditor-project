@@ -4,16 +4,16 @@ export const getData = () => {
     setTimeout(() => {
       resolve([
         {
-          channelId: "a",
-          channelName: "a"
+          channelId: "channel-name-a",
+          channelName: "channel-a"
         },
         {
-          channelId: "b",
-          channelName: "b"
+          channelId: "channel-name-b",
+          channelName: "channel-b"
         },
         {
-          channelId: "c",
-          channelName: "c"
+          channelId: "channel-name-c",
+          channelName: "channel-c"
         }
       ]);
     }, 1000);
